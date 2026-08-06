@@ -19,9 +19,12 @@
         <button onclick="copierTexte()">📋 Copier le résultat</button>
         <button onclick="telechargerTexte()">💾 Télécharger en .txt</button>
 
+        <!-- Formulaire d'envoi par email -->
         <form method="post" action="/envoyer_email">
             <input type="hidden" name="contenu" value="{{ resultat }}">
-            <input type="email" name="destinataire" placeholder="Entrez une adresse email">
+            <input type="text" name="objet" placeholder="Entrez l'objet de l'email"><br>
+            <input type="text" name="expediteur_nom" placeholder="Nom de l'expéditeur"><br>
+            <input type="text" name="destinataire" placeholder="Entrez une ou plusieurs adresses (séparées par des virgules)"><br>
             <button type="submit">📧 Envoyer par email</button>
         </form>
     {% endif %}
