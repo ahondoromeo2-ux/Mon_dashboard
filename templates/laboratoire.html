@@ -3,13 +3,18 @@
 {% block content %}
     <h2>Laboratoire IA 🤖</h2>
     <form method="post">
-        <textarea name="texte" placeholder="Entrez un texte à analyser" rows="5" cols="50"></textarea><br>
-        <button type="submit">Analyser</button>
+        <textarea name="texte" placeholder="Entrez un texte" rows="5" cols="50"></textarea><br>
+        <select name="action">
+            <option value="resume">Résumé</option>
+            <option value="traduction">Traduction (en anglais)</option>
+            <option value="sentiment">Analyse de sentiment</option>
+            <option value="creatif">Transformation créative</option>
+        </select><br><br>
+        <button type="submit">Tester IA</button>
     </form>
 
     {% if resultat %}
         <h3>Résultat :</h3>
-        <p><strong>Texte original :</strong> {{ resultat.texte_original }}</p>
-        <p><strong>Résumé IA :</strong> {{ resultat.resume }}</p>
+        <p>{{ resultat }}</p>
     {% endif %}
 {% endblock %}
