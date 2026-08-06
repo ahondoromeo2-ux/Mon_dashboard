@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Historique des résultats IA 📜</h2>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Date</th>
+            <th>Texte original</th>
+            <th>Action</th>
+            <th>Résultat</th>
+        </tr>
+        {% for r in resultats %}
+        <tr>
+            <td>{{ r[4] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
