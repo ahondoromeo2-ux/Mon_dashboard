@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Horoscope du jour 🔮</h2>
+    <form method="post">
+        <input type="text" name="sign" placeholder="Entrez votre signe (ex: taurus)">
+        <button type="submit">Voir l'horoscope</button>
+    </form>
+
+    {% if horoscope %}
+        <h3>Signe : {{ horoscope.signe }}</h3>
+        <p>Date : {{ horoscope.date }}</p>
+        <p>Description : {{ horoscope.description }}</p>
+        <p>Humeur : {{ horoscope.humeur }}</p>
+        <p>Couleur chanceuse : {{ horoscope.couleur }}</p>
+        <p>Nombre chanceux : {{ horoscope.nombre }}</p>
+        <p>Heure chanceuse : {{ horoscope.temps_chanceux }}</p>
+    {% endif %}
+{% endblock %}
