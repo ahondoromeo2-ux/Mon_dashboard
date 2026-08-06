@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Météo du jour</h2>
+    <p>Ville : {{ meteo.ville }}</p>
+    <p>Température : {{ meteo.temperature }}</p>
+    <p>Condition : {{ meteo.condition }}</p>
+{% endblock %}
