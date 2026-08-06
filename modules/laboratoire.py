@@ -1,9 +1,14 @@
+from openai import OpenAI
+from config import API_KEY_OPENAI
+
+client = OpenAI(api_key=API_KEY_OPENAI)
+
 def analyse_texte(texte):
-    mots = texte.split()
-    nb_mots = len(mots)
-    resume = "Résumé automatique : " + " ".join(mots[:10]) + ("..." if nb_mots > 10 else "")
+    response = client.responses.create(
+        model="gpt-5.6",
+        input=f"Analyse ce texte et donne un résumé : {texte}"
+    )
     return {
         "texte_original": texte,
-        "nb_mots": nb_mots,
-        "resume": resume
+        "resume": response.output_text
     }
