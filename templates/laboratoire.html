@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Laboratoire IA 🤖</h2>
+    <form method="post">
+        <textarea name="texte" placeholder="Entrez un texte à analyser" rows="5" cols="50"></textarea><br>
+        <button type="submit">Analyser</button>
+    </form>
+
+    {% if resultat %}
+        <h3>Résultat :</h3>
+        <p><strong>Texte original :</strong> {{ resultat.texte_original }}</p>
+        <p><strong>Nombre de mots :</strong> {{ resultat.nb_mots }}</p>
+        <p><strong>Résumé :</strong> {{ resultat.resume }}</p>
+    {% endif %}
+{% endblock %}
