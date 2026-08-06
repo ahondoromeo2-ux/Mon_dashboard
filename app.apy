@@ -1,39 +1,7 @@
-from flask import Flask, render_template, request
-import smtplib
-from email.mime.text import MIMEText
-from modules import meteo, news, horoscope, laboratoire
+from database import init_db, ajouter_resultat, lire_resultats
 
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return render_template("home.html")
-
-@app.route("/meteo", methods=["GET", "POST"])
-def meteo_page():
-    infos = None
-    if request.method == "POST":
-        city = request.form.get("city")
-        infos = meteo.get_meteo(city)
-    return render_template("meteo.html", meteo=infos)
-
-@app.route("/news", methods=["GET", "POST"])
-def news_page():
-    articles = []
-    if request.method == "POST":
-        country = request.form.get("country")
-        articles = news.get_news(country)
-    else:
-        articles = news.get_news("fr")
-    return render_template("news.html", news=articles)
-
-@app.route("/horoscope", methods=["GET", "POST"])
-def horoscope_page():
-    infos = None
-    if request.method == "POST":
-        sign = request.form.get("sign").lower()
-        infos = horoscope.get_horoscope(sign)
-    return render_template("horoscope.html", horoscope=infos)
+# Initialiser la base au démarrage
+init_db()
 
 @app.route("/laboratoire", methods=["GET", "POST"])
 def laboratoire_page():
@@ -51,31 +19,12 @@ def laboratoire_page():
         elif action == "creatif":
             resultat = laboratoire.creatif_texte(texte)
 
+        # Sauvegarder dans l’historique
+        ajouter_resultat(texte, action, resultat)
+
     return render_template("laboratoire.html", resultat=resultat)
 
-@app.route("/envoyer_email", methods=["POST"])
-def envoyer_email():
-    contenu = request.form.get("contenu")
-    destinataires = request.form.get("destinataire")
-    objet = request.form.get("objet")
-    expediteur_nom = request.form.get("expediteur_nom")
-
-    # Ajouter une signature automatique
-    contenu_avec_signature = contenu + "\n\n---\nEnvoyé depuis le Laboratoire IA de Roméo"
-
-    # Séparer les adresses par virgules et enlever les espaces
-    liste_destinataires = [email.strip() for email in destinataires.split(",")]
-
-    msg = MIMEText(contenu_avec_signature)
-    msg["Subject"] = objet if objet else "Résultat Laboratoire IA"
-    msg["From"] = f"{expediteur_nom} <ahondoromeo2@gmail.com>"
-    msg["To"] = ", ".join(liste_destinataires)
-
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
-        serveur.login("ahondoromeo2@gmail.com", "hbwk yjpl vnqf rrgo")
-        serveur.send_message(msg)
-
-    return "Email envoyé avec succès ✅"
-
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route("/historique")
+def historique_page():
+    resultats = lire_resultats()
+    return render_template("historique.html", resultats=resultats)
