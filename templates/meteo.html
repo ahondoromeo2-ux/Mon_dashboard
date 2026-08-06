@@ -1,15 +1,20 @@
-{% extends "base.html" %}
-
-{% block content %}
-    <h2>Météo du jour</h2>
-    <form method="post">
-        <input type="text" name="city" placeholder="Entrez une ville">
-        <button type="submit">Voir la météo</button>
-    </form>
-
-    {% if meteo %}
-        <p>Ville : {{ meteo.ville }}</p>
-        <p>Température : {{ meteo.temperature }}</p>
-        <p>Condition : {{ meteo.condition }}</p>
-    {% endif %}
-{% endblock %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Météo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="main">
+        <h1>🌤️ Météo à {{ weather.ville }}</h1>
+        <div class="card">
+            <p><strong>Température :</strong> {{ weather.temperature }} °C</p>
+            <p><strong>Humidité :</strong> {{ weather.humidite }} %</p>
+            <p><strong>Vent :</strong> {{ weather.vent }} km/h</p>
+            <p><strong>Pression :</strong> {{ weather.pression }} hPa</p>
+            <p><strong>Conditions :</strong> {{ weather.description }}</p>
+        </div>
+    </div>
+</body>
+</html>
