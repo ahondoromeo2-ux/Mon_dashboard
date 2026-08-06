@@ -1,6 +1,57 @@
 from flask import Flask, render_template, request
 import smtplib
 from email.mime.text import MIMEText
+from modules import meteo, news, horoscope, laboratoire
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+@app.route("/meteo", methods=["GET", "POST"])
+def meteo_page():
+    infos = None
+    if request.method == "POST":
+        city = request.form.get("city")
+        infos = meteo.get_meteo(city)
+    return render_template("meteo.html", meteo=infos)
+
+@app.route("/news", methods=["GET", "POST"])
+def news_page():
+    articles = []
+    if request.method == "POST":
+        country = request.form.get("country")
+        articles = news.get_news(country)
+    else:
+        articles = news.get_news("fr")
+    return render_template("news.html", news=articles)
+
+@app.route("/horoscope", methods=["GET", "POST"])
+def horoscope_page():
+    infos = None
+    if request.method == "POST":
+        sign = request.form.get("sign").lower()
+        infos = horoscope.get_horoscope(sign)
+    return render_template("horoscope.html", horoscope=infos)
+
+@app.route("/laboratoire", methods=["GET", "POST"])
+def laboratoire_page():
+    resultat = None
+    if request.method == "POST":
+        texte = request.form.get("texte")
+        action = request.form.get("action")
+
+        if action == "resume":
+            resultat = laboratoire.resume_texte(texte)
+        elif action == "traduction":
+            resultat = laboratoire.traduction_texte(texte, "en")
+        elif action == "sentiment":
+            resultat = laboratoire.sentiment_texte(texte)
+        elif action == "creatif":
+            resultat = laboratoire.creatif_texte(texte)
+
+    return render_template("laboratoire.html", resultat=resultat)
 
 @app.route("/envoyer_email", methods=["POST"])
 def envoyer_email():
@@ -12,9 +63,11 @@ def envoyer_email():
     msg["From"] = "ton_adresse@gmail.com"
     msg["To"] = destinataire
 
-    # ⚠️ Exemple avec Gmail (nécessite mot de passe d’application)
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
-        serveur.login("ton_adresse@gmail.com", "TON_MOT_DE_PASSE_APP")
+        serveur.login("ahondoromeo2@gmail.com", "hbwk yjpl vnqf rrgo")
         serveur.send_message(msg)
 
     return "Email envoyé avec succès ✅"
+
+if __name__ == "__main__":
+    app.run(debug=True)
