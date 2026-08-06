@@ -2,7 +2,14 @@
 
 {% block content %}
     <h2>Météo du jour</h2>
-    <p>Ville : {{ meteo.ville }}</p>
-    <p>Température : {{ meteo.temperature }}</p>
-    <p>Condition : {{ meteo.condition }}</p>
+    <form method="post">
+        <input type="text" name="city" placeholder="Entrez une ville">
+        <button type="submit">Voir la météo</button>
+    </form>
+
+    {% if meteo %}
+        <p>Ville : {{ meteo.ville }}</p>
+        <p>Température : {{ meteo.temperature }}</p>
+        <p>Condition : {{ meteo.condition }}</p>
+    {% endif %}
 {% endblock %}
