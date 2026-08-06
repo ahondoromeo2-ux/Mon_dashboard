@@ -56,12 +56,15 @@ def laboratoire_page():
 @app.route("/envoyer_email", methods=["POST"])
 def envoyer_email():
     contenu = request.form.get("contenu")
-    destinataire = request.form.get("destinataire")
+    destinataires = request.form.get("destinataire")
+
+    # Séparer les adresses par virgules et enlever les espaces
+    liste_destinataires = [email.strip() for email in destinataires.split(",")]
 
     msg = MIMEText(contenu)
     msg["Subject"] = "Résultat Laboratoire IA"
-    msg["From"] = "ton_adresse@gmail.com"
-    msg["To"] = destinataire
+    msg["From"] = "ahondoromeo2@gmail.com"
+    msg["To"] = ", ".join(liste_destinataires)
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
         serveur.login("ahondoromeo2@gmail.com", "hbwk yjpl vnqf rrgo")
