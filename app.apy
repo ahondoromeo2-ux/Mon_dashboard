@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from modules import meteo, news, horoscope
+from modules import meteo, news, horoscope, laboratoire
 
 app = Flask(__name__)
 
@@ -32,6 +32,14 @@ def horoscope_page():
         sign = request.form.get("sign").lower()
         infos = horoscope.get_horoscope(sign)
     return render_template("horoscope.html", horoscope=infos)
+
+@app.route("/laboratoire", methods=["GET", "POST"])
+def laboratoire_page():
+    resultat = None
+    if request.method == "POST":
+        texte = request.form.get("texte")
+        resultat = laboratoire.analyse_texte(texte)
+    return render_template("laboratoire.html", resultat=resultat)
 
 if __name__ == "__main__":
     app.run(debug=True)
