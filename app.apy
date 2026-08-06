@@ -60,10 +60,13 @@ def envoyer_email():
     objet = request.form.get("objet")
     expediteur_nom = request.form.get("expediteur_nom")
 
+    # Ajouter une signature automatique
+    contenu_avec_signature = contenu + "\n\n---\nEnvoyé depuis le Laboratoire IA de Roméo"
+
     # Séparer les adresses par virgules et enlever les espaces
     liste_destinataires = [email.strip() for email in destinataires.split(",")]
 
-    msg = MIMEText(contenu)
+    msg = MIMEText(contenu_avec_signature)
     msg["Subject"] = objet if objet else "Résultat Laboratoire IA"
     msg["From"] = f"{expediteur_nom} <ahondoromeo2@gmail.com>"
     msg["To"] = ", ".join(liste_destinataires)
