@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Dernières Actualités 📰</h2>
+    <form method="post">
+        <input type="text" name="country" placeholder="Entrez un code pays (ex: fr, us, tg)">
+        <button type="submit">Voir les news</button>
+    </form>
+
+    <ul>
+        {% for article in news %}
+            <li>
+                <strong>{{ article.titre }}</strong> ({{ article.source }})  
+                <a href="{{ article.url }}" target="_blank">Lire</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
