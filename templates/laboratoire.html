@@ -17,6 +17,7 @@
         <h3>Résultat :</h3>
         <p id="resultat">{{ resultat }}</p>
         <button onclick="copierTexte()">📋 Copier le résultat</button>
+        <button onclick="telechargerTexte()">💾 Télécharger en .txt</button>
     {% endif %}
 
     <script>
@@ -25,6 +26,15 @@
             navigator.clipboard.writeText(texte).then(() => {
                 alert("Résultat copié dans le presse-papier !");
             });
+        }
+
+        function telechargerTexte() {
+            const texte = document.getElementById("resultat").innerText;
+            const blob = new Blob([texte], { type: "text/plain" });
+            const lien = document.createElement("a");
+            lien.href = URL.createObjectURL(blob);
+            lien.download = "resultat_IA.txt";
+            lien.click();
         }
     </script>
 {% endblock %}
