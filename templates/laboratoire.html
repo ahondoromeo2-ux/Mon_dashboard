@@ -15,6 +15,16 @@
 
     {% if resultat %}
         <h3>Résultat :</h3>
-        <p>{{ resultat }}</p>
+        <p id="resultat">{{ resultat }}</p>
+        <button onclick="copierTexte()">📋 Copier le résultat</button>
     {% endif %}
+
+    <script>
+        function copierTexte() {
+            const texte = document.getElementById("resultat").innerText;
+            navigator.clipboard.writeText(texte).then(() => {
+                alert("Résultat copié dans le presse-papier !");
+            });
+        }
+    </script>
 {% endblock %}
