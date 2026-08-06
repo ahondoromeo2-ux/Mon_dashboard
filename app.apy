@@ -1,45 +1,17 @@
-from flask import Flask, render_template, request
-from modules import meteo, news, horoscope, laboratoire
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return render_template("home.html")
-
-@app.route("/meteo", methods=["GET", "POST"])
-def meteo_page():
-    infos = None
-    if request.method == "POST":
-        city = request.form.get("city")
-        infos = meteo.get_meteo(city)
-    return render_template("meteo.html", meteo=infos)
-
-@app.route("/news", methods=["GET", "POST"])
-def news_page():
-    articles = []
-    if request.method == "POST":
-        country = request.form.get("country")
-        articles = news.get_news(country)
-    else:
-        articles = news.get_news("fr")
-    return render_template("news.html", news=articles)
-
-@app.route("/horoscope", methods=["GET", "POST"])
-def horoscope_page():
-    infos = None
-    if request.method == "POST":
-        sign = request.form.get("sign").lower()
-        infos = horoscope.get_horoscope(sign)
-    return render_template("horoscope.html", horoscope=infos)
-
 @app.route("/laboratoire", methods=["GET", "POST"])
 def laboratoire_page():
     resultat = None
     if request.method == "POST":
         texte = request.form.get("texte")
-        resultat = laboratoire.analyse_texte(texte)
-    return render_template("laboratoire.html", resultat=resultat)
+        action = request.form.get("action")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        if action == "resume":
+            resultat = laboratoire.resume_texte(texte)
+        elif action == "traduction":
+            resultat = laboratoire.traduction_texte(texte, "en")
+        elif action == "sentiment":
+            resultat = laboratoire.sentiment_texte(texte)
+        elif action == "creatif":
+            resultat = laboratoire.creatif_texte(texte)
+
+    return render_template("laboratoire.html", resultat=resultat)
