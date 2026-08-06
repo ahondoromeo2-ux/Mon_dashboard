@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from modules import meteo, news
+from modules import meteo, news, horoscope
 
 app = Flask(__name__)
 
@@ -22,8 +22,16 @@ def news_page():
         country = request.form.get("country")
         articles = news.get_news(country)
     else:
-        articles = news.get_news("fr")  # Par défaut France
+        articles = news.get_news("fr")
     return render_template("news.html", news=articles)
+
+@app.route("/horoscope", methods=["GET", "POST"])
+def horoscope_page():
+    infos = None
+    if request.method == "POST":
+        sign = request.form.get("sign").lower()
+        infos = horoscope.get_horoscope(sign)
+    return render_template("horoscope.html", horoscope=infos)
 
 if __name__ == "__main__":
     app.run(debug=True)
