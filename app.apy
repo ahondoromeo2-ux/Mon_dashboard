@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from modules import meteo  # Import du module météo
+from flask import Flask, render_template, request
+from modules import meteo
 
 app = Flask(__name__)
 
@@ -7,9 +7,12 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-@app.route("/meteo")
+@app.route("/meteo", methods=["GET", "POST"])
 def meteo_page():
-    infos = meteo.get_meteo()
+    infos = None
+    if request.method == "POST":
+        city = request.form.get("city")
+        infos = meteo.get_meteo(city)
     return render_template("meteo.html", meteo=infos)
 
 if __name__ == "__main__":
