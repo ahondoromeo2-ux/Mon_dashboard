@@ -1,17 +1,20 @@
-@app.route("/laboratoire", methods=["GET", "POST"])
-def laboratoire_page():
-    resultat = None
-    if request.method == "POST":
-        texte = request.form.get("texte")
-        action = request.form.get("action")
+from flask import Flask, render_template, request
+import smtplib
+from email.mime.text import MIMEText
 
-        if action == "resume":
-            resultat = laboratoire.resume_texte(texte)
-        elif action == "traduction":
-            resultat = laboratoire.traduction_texte(texte, "en")
-        elif action == "sentiment":
-            resultat = laboratoire.sentiment_texte(texte)
-        elif action == "creatif":
-            resultat = laboratoire.creatif_texte(texte)
+@app.route("/envoyer_email", methods=["POST"])
+def envoyer_email():
+    contenu = request.form.get("contenu")
+    destinataire = request.form.get("destinataire")
 
-    return render_template("laboratoire.html", resultat=resultat)
+    msg = MIMEText(contenu)
+    msg["Subject"] = "Résultat Laboratoire IA"
+    msg["From"] = "ton_adresse@gmail.com"
+    msg["To"] = destinataire
+
+    # ⚠️ Exemple avec Gmail (nécessite mot de passe d’application)
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as serveur:
+        serveur.login("ton_adresse@gmail.com", "TON_MOT_DE_PASSE_APP")
+        serveur.send_message(msg)
+
+    return "Email envoyé avec succès ✅"
