@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Roméo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav>
+        <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/meteo">Météo</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/horoscope">Horoscope</a></li>
+            <li><a href="/laboratoire">Laboratoire IA</a></li>
+        </ul>
+
+        <!-- Moteurs de recherche -->
+        <form action="https://duckduckgo.com/" method="get" target="_blank">
+            <input type="text" name="q" placeholder="Recherche DuckDuckGo">
+            <button type="submit">🔍</button>
+        </form>
+
+        <form action="https://www.bing.com/search" method="get" target="_blank">
+            <input type="text" name="q" placeholder="Recherche Bing">
+            <button type="submit">🔍</button>
+        </form>
+
+        <form action="https://www.google.com/search" method="get" target="_blank">
+            <input type="text" name="q" placeholder="Recherche Google">
+            <button type="submit">🔍</button>
+        </form>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
