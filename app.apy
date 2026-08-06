@@ -1,0 +1,13 @@
+from flask import Flask
+
+# On crée notre application Flask
+app = Flask(__name__)
+
+# Route principale (page d'accueil)
+@app.route("/")
+def home():
+    return "Bienvenue Roméo sur ton Dashboard 🎉"
+
+# Lancer le serveur
+if __name__ == "__main__":
+    app.run(debug=True)
