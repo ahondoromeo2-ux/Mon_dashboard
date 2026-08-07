@@ -176,49 +176,48 @@
             window.open(url, "_blank");
         });
 
-        // Assistant IA
-        function sendCommand() {
-            let input = document.getElementById("userInput").value.toLowerCase();
+        // Assistant IA connecté à OpenAI
+        async function sendCommand() {
+            let input = document.getElementById("userInput").value;
             let messages = document.getElementById("messages");
 
             messages.innerHTML += "<p><strong>Vous:</strong> " + input + "</p>";
 
-            if(input.includes("clair")) {
-                document.body.style.backgroundColor = "#f4f4f9";
-                document.body.style.color = "#000";
-                messages.innerHTML += "<p><strong>Assistant:</strong> Thème changé en clair ✅</p>";
-            } else if(input.includes("sombre")) {
+            let response = await fetch("/assistant", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({message: input})
+            });
+
+            let data = await response.json();
+            let aiReply = data.reply;
+
+            messages.innerHTML += "<p><strong>Assistant:</strong> " + aiReply + "</p>";
+            document.getElementById("userInput").value = "";
+
+            // Exemple d'interprétation automatique
+            if(aiReply.toLowerCase().includes("sombre")) {
                 document.body.style.backgroundColor = "#1e1e2f";
                 document.body.style.color = "#fff";
-                messages.innerHTML += "<p><strong>Assistant:</strong> Thème changé en sombre ✅</p>";
-            } else if(input.includes("rouge")) {
-                document.querySelectorAll(".sidebar ul li a").forEach(el => el.style.backgroundColor = "red");
-                messages.innerHTML += "<p><strong>Assistant:</strong> Couleur principale changée en rouge 🔴</p>";
-            } else if(input.includes("vert")) {
-                document.querySelectorAll(".sidebar ul li a").forEach(el => el.style.backgroundColor = "green");
-                messages.innerHTML += "<p><strong>Assistant:</strong> Couleur principale changée en vert 🟢</p>";
-            } else if(input.includes("bleu")) {
-                document.querySelectorAll(".sidebar ul li a").forEach(el => el.style.backgroundColor = "#007BFF");
-                messages.innerHTML += "<p><strong>Assistant:</strong> Couleur principale changée en bleu 🔵</p>";
-            } else if(input.includes("agrandir sidebar")) {
-                document.querySelector(".sidebar").style.width = "300px";
-                document.querySelector(".main").style.marginLeft = "320px";
-                messages.innerHTML += "<p><strong>Assistant:</strong> Sidebar agrandie ✅</p>";
-            } else if(input.includes("réduire sidebar")) {
-                document.querySelector(".sidebar").style.width = "150px";
-                document.querySelector(".main").style.marginLeft = "170px";
-                messages.innerHTML += "<p><strong>Assistant:</strong> Sidebar réduite ✅</p>";
-            } else if(input.includes("masquer recherche")) {
-                document.querySelector(".navbar").style.display = "none";
-                messages.innerHTML += "<p><strong>Assistant:</strong> Barre de recherche masquée ✅</p>";
-            } else if(input.includes("afficher recherche")) {
-                document.querySelector(".navbar").style.display = "flex";
-                messages.innerHTML += "<p><strong>Assistant:</strong> Barre de recherche affichée ✅</p>";
-            } else if(input.includes("ajouter bouton météo")) {
-                let quickBtn = document.createElement("button");
-                quickBtn.innerText = "☁️ Météo rapide";
-                quickBtn.onclick = () => window.location.href="/meteo";
-                document.querySelector(".navbar").appendChild(quickBtn);
-                messages.innerHTML += "<p><strong>Assistant:</strong> Bouton météo ajouté ✅</p>";
-            } else {
-                messages.inner
+            }
+            if(aiReply.toLowerCase().includes("clair")) {
+                document.body.style.backgroundColor = "#f4f4f9";
+                document.body.style.color = "#000";
+            }
+        }
+
+        // 🎤 Reconnaissance vocale
+        function startVoice() {
+            let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "fr-FR";
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                let voiceCommand = event.results[0][0].transcript;
+                document.getElementById("userInput").value = voiceCommand;
+                sendCommand();
+            };
+        }
+    </script>
+</body>
+</html>
