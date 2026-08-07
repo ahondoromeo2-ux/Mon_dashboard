@@ -25,5 +25,13 @@ const actions = {
         document.querySelector(".sidebar").style.width = "220px";
         document.querySelector(".main").style.marginLeft = "240px";
         document.querySelector(".navbar").style.display = "flex";
-    }
+        document.getElementById("worldClock").style.display = "block";
+        document.getElementById("weatherWidget").style.display = "block";
+    },
+
+    // Nouveaux modules
+    "afficher horloge": () => { document.getElementById("worldClock").style.display = "block"; },
+    "masquer horloge": () => { document.getElementById("worldClock").style.display = "none"; },
+    "afficher météo": () => { document.getElementById("weatherWidget").style.display = "block"; },
+    "masquer météo": () => { document.getElementById("weatherWidget").style.display = "none"; }
 };
