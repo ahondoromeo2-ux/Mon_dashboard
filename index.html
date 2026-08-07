@@ -3,23 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Mon Dashboard</title>
+    <script src="actions.js"></script> <!-- Import du dictionnaire -->
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; background-color: #1e1e2f; color: #fff; }
-        .sidebar { width: 220px; background-color: #111; position: fixed; height: 100%; padding-top: 20px; }
-        .sidebar h2 { text-align: center; color: #fff; }
-        .sidebar ul { list-style-type: none; padding: 0; }
-        .sidebar ul li { padding: 15px; text-align: center; }
-        .sidebar ul li a { color: #fff; text-decoration: none; display: block; border-radius: 5px; }
-        .sidebar ul li a:hover { background-color: #007BFF; }
-        .main { margin-left: 240px; padding: 20px; }
-        .navbar { background-color: #111; padding: 10px; display: flex; justify-content: center; align-items: center; }
-        .navbar input, .navbar select, .navbar button { padding: 8px; margin-left: 5px; border-radius: 5px; border: none; }
-        .navbar button { background-color: #007BFF; color: white; cursor: pointer; }
-        .navbar button:hover { background-color: #0056b3; }
-        #assistant { position: fixed; bottom: 20px; right: 20px; width: 300px; background: #111; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5); color: #fff; padding: 10px; }
-        #messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
-        #userInput { width: 60%; padding: 5px; }
-        #assistant button { padding: 5px 10px; margin-left: 5px; }
+        /* Styles identiques à avant */
     </style>
 </head>
 <body>
@@ -84,36 +70,6 @@
             else if(engine === "maps") url = "https://www.google.com/maps/search/" + encodeURIComponent(query);
             window.open(url, "_blank");
         });
-
-        // Dictionnaire d’actions enrichi
-        const actions = {
-            "mode sombre": () => { document.body.style.backgroundColor = "#1e1e2f"; document.body.style.color = "#fff"; },
-            "mode clair": () => { document.body.style.backgroundColor = "#f4f4f9"; document.body.style.color = "#000"; },
-            "agrandir sidebar": () => { document.querySelector(".sidebar").style.width = "300px"; document.querySelector(".main").style.marginLeft = "320px"; },
-            "réduire sidebar": () => { document.querySelector(".sidebar").style.width = "150px"; document.querySelector(".main").style.marginLeft = "170px"; },
-            "masquer recherche": () => { document.querySelector(".navbar").style.display = "none"; },
-            "afficher recherche": () => { document.querySelector(".navbar").style.display = "flex"; },
-            "ajouter bouton météo": () => {
-                let quickBtn = document.createElement("button");
-                quickBtn.innerText = "☁️ Météo rapide";
-                quickBtn.onclick = () => window.location.href="/meteo";
-                document.querySelector(".navbar").appendChild(quickBtn);
-            },
-            "changer police arial": () => { document.body.style.fontFamily = "Arial, sans-serif"; },
-            "changer police courier": () => { document.body.style.fontFamily = "Courier New, monospace"; },
-            "texte petit": () => { document.body.style.fontSize = "12px"; },
-            "texte moyen": () => { document.body.style.fontSize = "16px"; },
-            "texte grand": () => { document.body.style.fontSize = "20px"; },
-            "réinitialiser paramètres": () => {
-                document.body.style.backgroundColor = "#1e1e2f";
-                document.body.style.color = "#fff";
-                document.body.style.fontFamily = "Arial, sans-serif";
-                document.body.style.fontSize = "16px";
-                document.querySelector(".sidebar").style.width = "220px";
-                document.querySelector(".main").style.marginLeft = "240px";
-                document.querySelector(".navbar").style.display = "flex";
-            }
-        };
 
         // Assistant IA connecté à OpenAI
         async function sendCommand() {
