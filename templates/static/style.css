@@ -1,14 +1,65 @@
-.card {
-    background-color: #222;
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 10px;
-    width: 300px;
-    text-align: left;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2f;
+    color: #fff;
 }
 
-.card p {
-    margin: 8px 0;
-    color: #ddd;
+.sidebar {
+    width: 220px;
+    background-color: #111;
+    position: fixed;
+    height: 100%;
+    padding-top: 20px;
 }
+
+.sidebar h2 {
+    text-align: center;
+    color: #fff;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    text-align: center;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    border-radius: 5px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #007BFF;
+}
+
+.main {
+    margin-left: 240px;
+    padding: 20px;
+}
+
+/* Barre de navigation */
+.navbar {
+    background-color: #111;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar input, .navbar select, .navbar button {
+    padding: 8px;
+    margin-left: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+.navbar button {
+    background-color: #007BFF;
+    color: white
