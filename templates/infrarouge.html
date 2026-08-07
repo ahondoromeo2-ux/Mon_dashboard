@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrôle Infrarouge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .controls {
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 15px 25px;
+            margin: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>🌐 Contrôle Infrarouge</h1>
+        <div class="controls">
+            <button onclick="sendIR('power')">ON / OFF</button>
+            <button onclick="sendIR('volume_up')">Volume +</button>
+            <button onclick="sendIR('volume_down')">Volume -</button>
+            <button onclick="sendIR('channel_up')">Chaîne +</button>
+            <button onclick="sendIR('channel_down')">Chaîne -</button>
+        </div>
+        <p id="status">Statut : en attente...</p>
+    </div>
+
+    <script>
+        function sendIR(command) {
+            // ⚠️ Exemple : nécessite un plugin ou API Android pour IR
+            document.getElementById("status").innerText = "Commande envoyée : " + command;
+            // Ici, on simule l’envoi. Sur Android, il faut utiliser une lib IR spécifique.
+        }
+    </script>
+</body>
+</html>
