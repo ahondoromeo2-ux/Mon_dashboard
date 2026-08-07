@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Mon Dashboard</h2>
+        <ul>
+            <li><a href="/meteo">☁️ Météo</a></li>
+            <li><a href="/news">📰 News du Monde</a></li>
+            <li><a href="/boussole">🧭 Boussole</a></li>
+            <li><a href="/scanner">📷 Scanneur</a></li>
+            <li><a href="/frequence">🎵 Fréquence</a></li>
+            <li><a href="/infrarouge">🌐 Infrarouge</a></li>
+            <li><a href="/galerie">🎞️ Galerie</a></li>
+            <li><a href="/jeux">🎮 Mini-jeux</a></li>
+            <li><a href="/notes">📝 Notes</a></li>
+            <li><a href="/stats">📊 Statistiques</a></li>
+            <li><a href="/horloge">⏰ Horloge mondiale</a></li>
+        </ul>
+    </div>
+    <div class="main">
+        <h1>Bienvenue Roméo 🚀</h1>
+        <p>Sélectionne un module dans le menu à gauche.</p>
+    </div>
+</body>
+</html>
