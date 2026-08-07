@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .navbar {
+            background-color: #111;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .navbar input {
+            padding: 8px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+            margin-right: 10px;
+        }
+        .navbar select, .navbar button {
+            padding: 8px;
+            margin-left: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        .navbar button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .navbar button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <div class="navbar">
+        <form id="searchForm" target="_blank">
+            <input type="text" id="query" placeholder="Rechercher...">
+            <select id="engine">
+                <option value="google">Google</option>
+                <option value="bing">Bing</option>
+                <option value="duckduckgo">DuckDuckGo</option>
+                <option value="maps">Google Maps</option>
+            </select>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
+
+    <!-- Sidebar + contenu -->
+    <div class="sidebar">
+        <h2>Mon Dashboard</h2>
+        <ul>
+            <li><a href="/meteo">☁️ Météo</a></li>
+            <li><a href="/news">📰 News du Monde</a></li>
+            <li><a href="/boussole">🧭 Boussole</a></li>
+            <li><a href="/scanner">📷 Scanneur</a></li>
+            <li><a href="/frequence">🎵 Fréquence</a></li>
+            <li><a href="/infrarouge">🌐 Infrarouge</a></li>
+            <li><a href="/galerie">🎞️ Galerie</a></li>
+            <li><a href="/jeux">🎮 Mini-jeux</a></li>
+            <li><a href="/notes">📝 Notes</a></li>
+            <li><a href="/stats">📊 Statistiques</a></li>
+            <li><a href="/horloge">⏰ Horloge mondiale</a></li>
+        </ul>
+    </div>
+    <div class="main">
+        <h1>Bienvenue Roméo 🚀</h1>
+        <p>Sélectionne un module dans le menu à gauche.</p>
+    </div>
+
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            let query = document.getElementById("query").value;
+            let engine = document.getElementById("engine").value;
+            let url = "";
+
+            if(engine === "google") {
+                url = "https://www.google.com/search?q=" + encodeURIComponent(query);
+            } else if(engine === "bing") {
+                url = "https://www.bing.com/search?q=" + encodeURIComponent(query);
+            } else if(engine === "duckduckgo") {
+                url = "https://duckduckgo.com/?q=" + encodeURIComponent(query);
+            } else if(engine === "maps") {
+                url = "https://www.google.com/maps/search/" + encodeURIComponent(query);
+            }
+
+            window.open(url, "_blank");
+        });
+    </script>
+</body>
+</html>
