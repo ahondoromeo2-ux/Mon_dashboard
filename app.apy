@@ -7,15 +7,14 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
+# --- Météo ---
 @app.route("/meteo")
 def meteo():
-    api_key = "32df5bd6fd44c41016ca45c7cf0ec3a8"  # ta clé API météo
-    city = "Lome"  # tu peux changer la ville
+    api_key = "32df5bd6fd44c41016ca45c7cf0ec3a8"
+    city = "Lome"
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=fr"
-
     response = requests.get(url)
     data = response.json()
-
     weather = {
         "ville": city,
         "temperature": data["main"]["temp"],
@@ -24,8 +23,61 @@ def meteo():
         "description": data["weather"][0]["description"],
         "pression": data["main"]["pressure"]
     }
-
     return render_template("meteo.html", weather=weather)
+
+# --- News du Monde ---
+@app.route("/news")
+def news():
+    api_key = "ba900dff8161433a8d2ad9fd02cd3b04"
+    url = f"https://newsapi.org/v2/top-headlines?language=fr&apiKey={api_key}"
+    response = requests.get(url)
+    data = response.json()
+    articles = []
+    if "articles" in data:
+        for article in data["articles"][:5]:
+            articles.append({
+                "titre": article["title"],
+                "source": article["source"]["name"],
+                "url": article["url"]
+            })
+    return render_template("news.html", articles=articles)
+
+# --- Modules spéciaux ---
+@app.route("/boussole")
+def boussole():
+    return render_template("boussole.html")
+
+@app.route("/scanner")
+def scanner():
+    return render_template("scanner.html")
+
+@app.route("/frequence")
+def frequence():
+    return render_template("frequence.html")
+
+@app.route("/infrarouge")
+def infrarouge():
+    return render_template("infrarouge.html")
+
+@app.route("/galerie")
+def galerie():
+    return render_template("galerie.html")
+
+@app.route("/jeux")
+def jeux():
+    return render_template("jeux.html")
+
+@app.route("/notes")
+def notes():
+    return render_template("notes.html")
+
+@app.route("/stats")
+def stats():
+    return render_template("stats.html")
+
+@app.route("/horloge")
+def horloge():
+    return render_template("horloge.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
