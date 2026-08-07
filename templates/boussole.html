@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Boussole</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .compass {
+            width: 200px;
+            height: 200px;
+            border: 5px solid #007BFF;
+            border-radius: 50%;
+            margin: 50px auto;
+            position: relative;
+        }
+        .needle {
+            width: 4px;
+            height: 90px;
+            background: red;
+            position: absolute;
+            top: 10px;
+            left: 98px;
+            transform-origin: bottom center;
+            transition: transform 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>🧭 Boussole</h1>
+        <div class="compass">
+            <div class="needle" id="needle"></div>
+        </div>
+        <p id="direction">Direction: N/A</p>
+    </div>
+
+    <script>
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function(event) {
+                let alpha = event.alpha; // orientation en degrés
+                document.getElementById("needle").style.transform = "rotate(" + alpha + "deg)";
+                document.getElementById("direction").innerText = "Direction: " + Math.round(alpha) + "°";
+            }, true);
+        } else {
+            document.getElementById("direction").innerText = "Votre appareil ne supporte pas la boussole.";
+        }
+    </script>
+</body>
+</html>
