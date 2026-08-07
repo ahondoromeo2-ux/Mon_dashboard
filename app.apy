@@ -1,39 +1,49 @@
-import openai
-from flask import Flask, render_template, request, jsonify
-import config  # ta clé API est stockée ici
-
-openai.api_key = config.OPENAI_API_KEY
+from flask import Flask, jsonify
+import modules.meteo as meteo
+import modules.horoscope as horoscope
+import modules.laboratoire as laboratoire
+import modules.new as new
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+# --- ROUTES API ---
 
-@app.route("/assistant", methods=["POST"])
-def assistant():
-    user_input = request.json.get("message")
+# Météo
+@app.route("/api/meteo")
+def api_meteo():
+    try:
+        result = meteo.get_weather()  # fonction à définir dans meteo.py
+        return jsonify({"status": "success", "result": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
-    # On demande à l’IA de répondre en JSON avec une intention
-    system_prompt = """
-    Tu es un assistant pour un dashboard. 
-    Analyse la commande de l’utilisateur et renvoie uniquement un JSON avec une clé "action".
-    Exemple: {"action":"mode sombre"} ou {"action":"agrandir sidebar"}.
-    Si plusieurs actions sont demandées, renvoie une liste: {"actions":["mode sombre","agrandir sidebar"]}.
-    Ne renvoie rien d’autre que du JSON.
-    """
+# Horoscope
+@app.route("/api/horoscope")
+def api_horoscope():
+    try:
+        result = horoscope.get_horoscope()  # fonction à définir dans horoscope.py
+        return jsonify({"status": "success", "result": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_input}
-        ],
-        max_tokens=100
-    )
+# Laboratoire
+@app.route("/api/laboratoire")
+def api_laboratoire():
+    try:
+        result = laboratoire.run_experiment()  # fonction à définir dans laboratoire.py
+        return jsonify({"status": "success", "result": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
-    ai_reply = response["choices"][0]["message"]["content"]
-    return jsonify({"reply": ai_reply})
+# Module de test
+@app.route("/api/new")
+def api_new():
+    try:
+        result = new.test_module()  # fonction à définir dans new.py
+        return jsonify({"status": "success", "result": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
 
+# --- MAIN ---
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
