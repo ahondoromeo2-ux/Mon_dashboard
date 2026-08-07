@@ -16,7 +16,10 @@ const actions = {
     "ajouter bouton météo": () => {
         let quickBtn = document.createElement("button");
         quickBtn.innerText = "☁️ Météo rapide";
-        quickBtn.onclick = () => window.location.href="/meteo";
+        quickBtn.onclick = () => {
+            incrementStats("Météo");
+            window.location.href="/meteo";
+        };
         document.querySelector(".navbar").appendChild(quickBtn);
     },
 
@@ -53,3 +56,28 @@ const actions = {
     "afficher statistiques": () => { document.getElementById("statsModule").style.display = "block"; },
     "masquer statistiques": () => { document.getElementById("statsModule").style.display = "none"; }
 };
+
+// --- Gestion des statistiques dynamiques ---
+let statsCounters = {
+    "Météo": 0,
+    "News": 0,
+    "Galerie": 0,
+    "Jeux": 0,
+    "Notes": 0
+};
+
+// Fonction pour incrémenter un compteur
+function incrementStats(moduleName) {
+    if(statsCounters[moduleName] !== undefined) {
+        statsCounters[moduleName]++;
+        updateStatsChart();
+    }
+}
+
+// Fonction pour mettre à jour le graphique Chart.js
+function updateStatsChart() {
+    if(window.statsChart) {
+        window.statsChart.data.datasets[0].data = Object.values(statsCounters);
+        window.statsChart.update();
+    }
+}
