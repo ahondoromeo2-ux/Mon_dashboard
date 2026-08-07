@@ -1,6 +1,6 @@
 import openai
 from flask import Flask, render_template, request, jsonify
-import config  # <-- ta clé API est stockée ici
+import config  # ta clé API est stockée ici
 
 # Configurer OpenAI avec la clé API
 openai.api_key = config.OPENAI_API_KEY
