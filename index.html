@@ -85,7 +85,7 @@
             window.open(url, "_blank");
         });
 
-        // Dictionnaire d’actions
+        // Dictionnaire d’actions enrichi
         const actions = {
             "mode sombre": () => { document.body.style.backgroundColor = "#1e1e2f"; document.body.style.color = "#fff"; },
             "mode clair": () => { document.body.style.backgroundColor = "#f4f4f9"; document.body.style.color = "#000"; },
@@ -98,6 +98,20 @@
                 quickBtn.innerText = "☁️ Météo rapide";
                 quickBtn.onclick = () => window.location.href="/meteo";
                 document.querySelector(".navbar").appendChild(quickBtn);
+            },
+            "changer police arial": () => { document.body.style.fontFamily = "Arial, sans-serif"; },
+            "changer police courier": () => { document.body.style.fontFamily = "Courier New, monospace"; },
+            "texte petit": () => { document.body.style.fontSize = "12px"; },
+            "texte moyen": () => { document.body.style.fontSize = "16px"; },
+            "texte grand": () => { document.body.style.fontSize = "20px"; },
+            "réinitialiser paramètres": () => {
+                document.body.style.backgroundColor = "#1e1e2f";
+                document.body.style.color = "#fff";
+                document.body.style.fontFamily = "Arial, sans-serif";
+                document.body.style.fontSize = "16px";
+                document.querySelector(".sidebar").style.width = "220px";
+                document.querySelector(".main").style.marginLeft = "240px";
+                document.querySelector(".navbar").style.display = "flex";
             }
         };
 
@@ -118,11 +132,19 @@
             messages.innerHTML += "<p><strong>Assistant:</strong> " + aiReply + "</p>";
             document.getElementById("userInput").value = "";
 
-            // Vérifie si une action correspond
-            for (let key in actions) {
-                if(aiReply.toLowerCase().includes(key)) {
-                    actions[key]();
+            try {
+                let parsed = JSON.parse(aiReply);
+
+                if(parsed.action && actions[parsed.action]) {
+                    actions[parsed.action]();
                 }
+                if(parsed.actions) {
+                    parsed.actions.forEach(act => {
+                        if(actions[act]) actions[act]();
+                    });
+                }
+            } catch(e) {
+                console.error("Erreur parsing JSON:", e);
             }
         }
 
