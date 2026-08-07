@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Galerie Multimédia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px;
+        }
+        .gallery-item {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+        .gallery-item img, .gallery-item video {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>🎞️ Galerie Multimédia</h1>
+        <div class="gallery">
+            <!-- Exemple image -->
+            <div class="gallery-item">
+                <img src="{{ url_for('static', filename='media/image1.jpg') }}" alt="Image 1">
+                <p>Image 1</p>
+            </div>
+            <!-- Exemple vidéo -->
+            <div class="gallery-item">
+                <video controls>
+                    <source src="{{ url_for('static', filename='media/video1.mp4') }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la vidéo.
+                </video>
+                <p>Vidéo 1</p>
+            </div>
+            <!-- Exemple audio -->
+            <div class="gallery-item">
+                <audio controls>
+                    <source src="{{ url_for('static', filename='media/audio1.mp3') }}" type="audio/mpeg">
+                    Votre navigateur ne supporte pas l'audio.
+                </audio>
+                <p>Audio 1</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
