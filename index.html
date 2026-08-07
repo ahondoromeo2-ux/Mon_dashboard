@@ -1,48 +1,162 @@
-<!-- Module Statistiques personnelles -->
-<div id="statsModule">
-    <h3>📊 Statistiques personnelles</h3>
-    <canvas id="statsChart" width="400" height="200"></canvas>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Dashboard</title>
+    <script src="actions.js"></script> <!-- Import du dictionnaire -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #1e1e2f; color: #fff; }
+        .sidebar { width: 220px; background-color: #111; position: fixed; height: 100%; padding-top: 20px; }
+        .sidebar h2 { text-align: center; color: #fff; }
+        .sidebar ul { list-style-type: none; padding: 0; }
+        .sidebar ul li { padding: 15px; text-align: center; }
+        .sidebar ul li a { color: #fff; text-decoration: none; display: block; border-radius: 5px; }
+        .sidebar ul li a:hover { background-color: #007BFF; }
+        .main { margin-left: 240px; padding: 20px; }
+        .navbar { background-color: #111; padding: 10px; display: flex; justify-content: center; align-items: center; }
+        .navbar input, .navbar select, .navbar button { padding: 8px; margin-left: 5px; border-radius: 5px; border: none; }
+        .navbar button { background-color: #007BFF; color: white; cursor: pointer; }
+        .navbar button:hover { background-color: #0056b3; }
+        #assistant { position: fixed; bottom: 20px; right: 20px; width: 300px; background: #111; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5); color: #fff; padding: 10px; }
+        #messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
+        #userInput { width: 60%; padding: 5px; }
+        #assistant button { padding: 5px 10px; margin-left: 5px; }
+        #worldClock, #weatherWidget, #statsModule { background:#222; padding:15px; border-radius:10px; margin-bottom:20px; }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <div class="navbar">
+        <form id="searchForm" target="_blank">
+            <input type="text" id="query" placeholder="Rechercher...">
+            <select id="engine">
+                <option value="google">Google</option>
+                <option value="bing">Bing</option>
+                <option value="duckduckgo">DuckDuckGo</option>
+                <option value="maps">Google Maps</option>
+            </select>
+            <button type="submit">🔍</button>
+        </form>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Charger les stats depuis localStorage ou initialiser
-    let statsCounters = JSON.parse(localStorage.getItem("statsCounters")) || {
-        "Météo": 0,
-        "News": 0,
-        "Galerie": 0,
-        "Jeux": 0,
-        "Notes": 0
-    };
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Mon Dashboard</h2>
+        <ul>
+            <li><a href="/meteo" onclick="incrementStats('Météo')">☁️ Météo</a></li>
+            <li><a href="/news" onclick="incrementStats('News')">📰 News du Monde</a></li>
+            <li><a href="/galerie" onclick="incrementStats('Galerie')">🎞️ Galerie</a></li>
+            <li><a href="/jeux" onclick="incrementStats('Jeux')">🎮 Mini-jeux</a></li>
+            <li><a href="/notes" onclick="incrementStats('Notes')">📝 Notes</a></li>
+            <li><a href="/stats">📊 Statistiques</a></li>
+            <li><a href="/horloge">⏰ Horloge mondiale</a></li>
+        </ul>
+    </div>
 
-    // Initialiser Chart.js avec les données persistantes
-    const ctx = document.getElementById("statsChart").getContext("2d");
-    window.statsChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: Object.keys(statsCounters),
-            datasets: [{
-                label: "Nombre d'ouvertures",
-                data: Object.values(statsCounters),
-                backgroundColor: ["#007BFF", "#28a745", "#ffc107", "#dc3545", "#17a2b8"]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                title: { display: true, text: "Utilisation des modules" }
+    <!-- Contenu principal -->
+    <div class="main">
+        <h1>Bienvenue Roméo 🚀</h1>
+        <p>Sélectionne un module dans le menu à gauche.</p>
+
+        <!-- Horloge mondiale -->
+        <div id="worldClock">
+            <h3>🕒 Horloge mondiale</h3>
+            <p id="paris"></p>
+            <p id="lome"></p>
+            <p id="tokyo"></p>
+            <p id="newyork"></p>
+        </div>
+
+        <!-- Widget météo -->
+        <div id="weatherWidget">
+            <h3>☁️ Météo locale</h3>
+            <p id="weather"></p>
+        </div>
+
+        <!-- Module Statistiques personnelles -->
+        <div id="statsModule">
+            <h3>📊 Statistiques personnelles</h3>
+            <canvas id="statsChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Assistant IA -->
+    <div id="assistant">
+        <div id="chatbox">
+            <div id="messages"></div>
+            <input type="text" id="userInput" placeholder="Écris ta commande...">
+            <button onclick="sendCommand()">Envoyer</button>
+            <button onclick="startVoice()">🎤</button>
+        </div>
+    </div>
+
+    <script>
+        // Horloge mondiale
+        function updateClock() {
+            document.getElementById("paris").innerText = "Paris : " + new Date().toLocaleString("fr-FR", {timeZone: "Europe/Paris"});
+            document.getElementById("lome").innerText = "Lomé : " + new Date().toLocaleString("fr-FR", {timeZone: "Africa/Lome"});
+            document.getElementById("tokyo").innerText = "Tokyo : " + new Date().toLocaleString("fr-FR", {timeZone: "Asia/Tokyo"});
+            document.getElementById("newyork").innerText = "New York : " + new Date().toLocaleString("fr-FR", {timeZone: "America/New_York"});
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Widget météo (API OpenWeatherMap)
+        async function updateWeather() {
+            const apiKey = "TON_API_KEY_OPENWEATHER"; // Mets ta clé API ici
+            const city = "Lome"; // Ville par défaut
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=fr`;
+
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+                let temp = data.main.temp;
+                let desc = data.weather[0].description;
+                document.getElementById("weather").innerText = `${city} : ${temp}°C, ${desc}`;
+            } catch(e) {
+                document.getElementById("weather").innerText = "Impossible de charger la météo.";
             }
         }
-    });
+        updateWeather();
 
-    // Fonction pour incrémenter et sauvegarder
-    function incrementStats(moduleName) {
-        if(statsCounters[moduleName] !== undefined) {
-            statsCounters[moduleName]++;
-            localStorage.setItem("statsCounters", JSON.stringify(statsCounters)); // Sauvegarde
-            window.statsChart.data.datasets[0].data = Object.values(statsCounters);
-            window.statsChart.update();
+        // Statistiques personnelles (Chart.js avec persistance)
+        let statsCounters = JSON.parse(localStorage.getItem("statsCounters")) || {
+            "Météo": 0,
+            "News": 0,
+            "Galerie": 0,
+            "Jeux": 0,
+            "Notes": 0
+        };
+
+        const ctx = document.getElementById("statsChart").getContext("2d");
+        window.statsChart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: Object.keys(statsCounters),
+                datasets: [{
+                    label: "Nombre d'ouvertures",
+                    data: Object.values(statsCounters),
+                    backgroundColor: ["#007BFF", "#28a745", "#ffc107", "#dc3545", "#17a2b8"]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: "Utilisation des modules" }
+                }
+            }
+        });
+
+        function incrementStats(moduleName) {
+            if(statsCounters[moduleName] !== undefined) {
+                statsCounters[moduleName]++;
+                localStorage.setItem("statsCounters", JSON.stringify(statsCounters)); // Sauvegarde
+                window.statsChart.data.datasets[0].data = Object.values(statsCounters);
+                window.statsChart.update();
+            }
         }
-    }
-</script>
+    </script>
+</body>
+</html>
