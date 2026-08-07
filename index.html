@@ -26,20 +26,6 @@
     </style>
 </head>
 <body>
-    <!-- Barre de navigation -->
-    <div class="navbar">
-        <form id="searchForm" target="_blank">
-            <input type="text" id="query" placeholder="Rechercher...">
-            <select id="engine">
-                <option value="google">Google</option>
-                <option value="bing">Bing</option>
-                <option value="duckduckgo">DuckDuckGo</option>
-                <option value="maps">Google Maps</option>
-            </select>
-            <button type="submit">🔍</button>
-        </form>
-    </div>
-
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Mon Dashboard</h2>
@@ -57,7 +43,6 @@
     <!-- Contenu principal -->
     <div class="main">
         <h1>Bienvenue Roméo 🚀</h1>
-        <p>Sélectionne un module dans le menu à gauche.</p>
 
         <!-- Horloge mondiale -->
         <div id="worldClock">
@@ -102,12 +87,11 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Widget météo (API OpenWeatherMap)
+        // Widget météo
         async function updateWeather() {
             const apiKey = "TON_API_KEY_OPENWEATHER"; // Mets ta clé API ici
-            const city = "Lome"; // Ville par défaut
+            const city = "Lome";
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=fr`;
-
             try {
                 let response = await fetch(url);
                 let data = await response.json();
@@ -120,15 +104,10 @@
         }
         updateWeather();
 
-        // Statistiques personnelles (Chart.js avec persistance)
+        // Statistiques Chart.js
         let statsCounters = JSON.parse(localStorage.getItem("statsCounters")) || {
-            "Météo": 0,
-            "News": 0,
-            "Galerie": 0,
-            "Jeux": 0,
-            "Notes": 0
+            "Météo": 0, "News": 0, "Galerie": 0, "Jeux": 0, "Notes": 0
         };
-
         const ctx = document.getElementById("statsChart").getContext("2d");
         window.statsChart = new Chart(ctx, {
             type: "bar",
@@ -140,22 +119,33 @@
                     backgroundColor: ["#007BFF", "#28a745", "#ffc107", "#dc3545", "#17a2b8"]
                 }]
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    title: { display: true, text: "Utilisation des modules" }
-                }
-            }
+            options: { responsive: true, plugins: { legend: { display: false }, title: { display: true, text: "Utilisation des modules" } } }
         });
 
         function incrementStats(moduleName) {
             if(statsCounters[moduleName] !== undefined) {
                 statsCounters[moduleName]++;
-                localStorage.setItem("statsCounters", JSON.stringify(statsCounters)); // Sauvegarde
+                localStorage.setItem("statsCounters", JSON.stringify(statsCounters));
                 window.statsChart.data.datasets[0].data = Object.values(statsCounters);
                 window.statsChart.update();
             }
+        }
+
+        // 🎤 Reconnaissance vocale avec commande spéciale
+        function startVoice() {
+            let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "fr-FR";
+            recognition.start();
+            recognition.onresult = function(event) {
+                let voiceCommand = event.results[0][0].transcript.toLowerCase();
+                document.getElementById("userInput").value = voiceCommand;
+
+                if(voiceCommand.includes("réinitialise mes stats")) {
+                    actions["reset stats"]();
+                } else {
+                    sendCommand();
+                }
+            };
         }
     </script>
 </body>
