@@ -5,7 +5,23 @@
     <title>Mon Dashboard</title>
     <script src="actions.js"></script> <!-- Import du dictionnaire -->
     <style>
-        /* Styles identiques à avant */
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #1e1e2f; color: #fff; }
+        .sidebar { width: 220px; background-color: #111; position: fixed; height: 100%; padding-top: 20px; }
+        .sidebar h2 { text-align: center; color: #fff; }
+        .sidebar ul { list-style-type: none; padding: 0; }
+        .sidebar ul li { padding: 15px; text-align: center; }
+        .sidebar ul li a { color: #fff; text-decoration: none; display: block; border-radius: 5px; }
+        .sidebar ul li a:hover { background-color: #007BFF; }
+        .main { margin-left: 240px; padding: 20px; }
+        .navbar { background-color: #111; padding: 10px; display: flex; justify-content: center; align-items: center; }
+        .navbar input, .navbar select, .navbar button { padding: 8px; margin-left: 5px; border-radius: 5px; border: none; }
+        .navbar button { background-color: #007BFF; color: white; cursor: pointer; }
+        .navbar button:hover { background-color: #0056b3; }
+        #assistant { position: fixed; bottom: 20px; right: 20px; width: 300px; background: #111; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.5); color: #fff; padding: 10px; }
+        #messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
+        #userInput { width: 60%; padding: 5px; }
+        #assistant button { padding: 5px 10px; margin-left: 5px; }
+        #worldClock, #weatherWidget { background:#222; padding:15px; border-radius:10px; margin-bottom:20px; }
     </style>
 </head>
 <body>
@@ -45,76 +61,21 @@
     <div class="main">
         <h1>Bienvenue Roméo 🚀</h1>
         <p>Sélectionne un module dans le menu à gauche.</p>
-    </div>
 
-    <!-- Assistant IA -->
-    <div id="assistant">
-        <div id="chatbox">
-            <div id="messages"></div>
-            <input type="text" id="userInput" placeholder="Écris ta commande...">
-            <button onclick="sendCommand()">Envoyer</button>
-            <button onclick="startVoice()">🎤</button>
+        <!-- Horloge mondiale -->
+        <div id="worldClock">
+            <h3>🕒 Horloge mondiale</h3>
+            <p id="paris"></p>
+            <p id="lome"></p>
+            <p id="tokyo"></p>
+            <p id="newyork"></p>
+        </div>
+
+        <!-- Widget météo -->
+        <div id="weatherWidget">
+            <h3>☁️ Météo locale</h3>
+            <p id="weather"></p>
         </div>
     </div>
 
-    <script>
-        // Barre de recherche
-        document.getElementById("searchForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            let query = document.getElementById("query").value;
-            let engine = document.getElementById("engine").value;
-            let url = "";
-            if(engine === "google") url = "https://www.google.com/search?q=" + encodeURIComponent(query);
-            else if(engine === "bing") url = "https://www.bing.com/search?q=" + encodeURIComponent(query);
-            else if(engine === "duckduckgo") url = "https://duckduckgo.com/?q=" + encodeURIComponent(query);
-            else if(engine === "maps") url = "https://www.google.com/maps/search/" + encodeURIComponent(query);
-            window.open(url, "_blank");
-        });
-
-        // Assistant IA connecté à OpenAI
-        async function sendCommand() {
-            let input = document.getElementById("userInput").value;
-            let messages = document.getElementById("messages");
-            messages.innerHTML += "<p><strong>Vous:</strong> " + input + "</p>";
-
-            let response = await fetch("/assistant", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({message: input})
-            });
-
-            let data = await response.json();
-            let aiReply = data.reply;
-            messages.innerHTML += "<p><strong>Assistant:</strong> " + aiReply + "</p>";
-            document.getElementById("userInput").value = "";
-
-            try {
-                let parsed = JSON.parse(aiReply);
-
-                if(parsed.action && actions[parsed.action]) {
-                    actions[parsed.action]();
-                }
-                if(parsed.actions) {
-                    parsed.actions.forEach(act => {
-                        if(actions[act]) actions[act]();
-                    });
-                }
-            } catch(e) {
-                console.error("Erreur parsing JSON:", e);
-            }
-        }
-
-        // 🎤 Reconnaissance vocale
-        function startVoice() {
-            let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = "fr-FR";
-            recognition.start();
-            recognition.onresult = function(event) {
-                let voiceCommand = event.results[0][0].transcript;
-                document.getElementById("userInput").value = voiceCommand;
-                sendCommand();
-            };
-        }
-    </script>
-</body>
-</html>
+    <!-- Assistant IA -->
