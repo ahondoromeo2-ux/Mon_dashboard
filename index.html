@@ -44,15 +44,11 @@
     <div class="sidebar">
         <h2>Mon Dashboard</h2>
         <ul>
-            <li><a href="/meteo">☁️ Météo</a></li>
-            <li><a href="/news">📰 News du Monde</a></li>
-            <li><a href="/boussole">🧭 Boussole</a></li>
-            <li><a href="/scanner">📷 Scanneur</a></li>
-            <li><a href="/frequence">🎵 Fréquence</a></li>
-            <li><a href="/infrarouge">🌐 Infrarouge</a></li>
-            <li><a href="/galerie">🎞️ Galerie</a></li>
-            <li><a href="/jeux">🎮 Mini-jeux</a></li>
-            <li><a href="/notes">📝 Notes</a></li>
+            <li><a href="/meteo" onclick="incrementStats('Météo')">☁️ Météo</a></li>
+            <li><a href="/news" onclick="incrementStats('News')">📰 News du Monde</a></li>
+            <li><a href="/galerie" onclick="incrementStats('Galerie')">🎞️ Galerie</a></li>
+            <li><a href="/jeux" onclick="incrementStats('Jeux')">🎮 Mini-jeux</a></li>
+            <li><a href="/notes" onclick="incrementStats('Notes')">📝 Notes</a></li>
             <li><a href="/stats">📊 Statistiques</a></li>
             <li><a href="/horloge">⏰ Horloge mondiale</a></li>
         </ul>
@@ -96,19 +92,6 @@
     </div>
 
     <script>
-        // Barre de recherche
-        document.getElementById("searchForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            let query = document.getElementById("query").value;
-            let engine = document.getElementById("engine").value;
-            let url = "";
-            if(engine === "google") url = "https://www.google.com/search?q=" + encodeURIComponent(query);
-            else if(engine === "bing") url = "https://www.bing.com/search?q=" + encodeURIComponent(query);
-            else if(engine === "duckduckgo") url = "https://duckduckgo.com/?q=" + encodeURIComponent(query);
-            else if(engine === "maps") url = "https://www.google.com/maps/search/" + encodeURIComponent(query);
-            window.open(url, "_blank");
-        });
-
         // Horloge mondiale
         function updateClock() {
             document.getElementById("paris").innerText = "Paris : " + new Date().toLocaleString("fr-FR", {timeZone: "Europe/Paris"});
@@ -138,25 +121,34 @@
         updateWeather();
 
         // Statistiques personnelles (Chart.js)
-        const statsData = {
-            labels: ["Météo", "News", "Galerie", "Jeux", "Notes"],
-            datasets: [{
-                label: "Temps passé (min)",
-                data: [15, 30, 10, 45, 20],
-                backgroundColor: ["#007BFF", "#28a745", "#ffc107", "#dc3545", "#17a2b8"]
-            }]
-        };
+        let statsCounters = { "Météo": 0, "News": 0, "Galerie": 0, "Jeux": 0, "Notes": 0 };
         const ctx = document.getElementById("statsChart").getContext("2d");
-        const statsChart = new Chart(ctx, {
+        window.statsChart = new Chart(ctx, {
             type: "bar",
-            data: statsData,
+            data: {
+                labels: Object.keys(statsCounters),
+                datasets: [{
+                    label: "Nombre d'ouvertures",
+                    data: Object.values(statsCounters),
+                    backgroundColor: ["#007BFF", "#28a745", "#ffc107", "#dc3545", "#17a2b8"]
+                }]
+            },
             options: {
                 responsive: true,
                 plugins: {
                     legend: { display: false },
-                    title: { display: true, text: "Temps passé par module" }
+                    title: { display: true, text: "Utilisation des modules" }
                 }
             }
         });
+
+        function incrementStats(moduleName) {
+            if(statsCounters[moduleName] !== undefined) {
+                statsCounters[moduleName]++;
+                window.statsChart.data.datasets[0].data = Object.values(statsCounters);
+                window.statsChart.update();
+            }
+        }
     </script>
-</body
+</body>
+</html>
